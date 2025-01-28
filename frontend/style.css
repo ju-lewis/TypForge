@@ -1,8 +1,8 @@
 /* TypForge stylesheet */
 
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
+/* ========================= Main theme defintions ========================= */
 
 :root {
     --main-accent: #3AAFA9;
@@ -27,4 +27,49 @@ body {
 	background-color: var(--dark-secondary);
     color: white;
     font-family: "Nunito Sans";
+    padding: 2rem;
+}
+
+a:link {
+    color: var(--link);
+}
+a:hover {
+    color: var(--link-hover);
+}
+a:visited {
+    color: var(--link);
+}
+a:visited:hover {
+    color: var(--link-hover);
+}
+
+h1, h2, h3 {
+    font-family: "Montserrat";
+}
+
+/* ===================== End of main theme defintions ====================== */
+
+.small-input {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    background-color: #FFFFFF11;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    width: fit-content;
+}
+
+#typst-input {
+    resize: none;
+    width: 100%;
+}
+
+.output-container {
+    display: flex;
+}
+.output-container > * {
+    width: 50%;
+}
+.output-container > div > h2 {
+    text-align: center;
 }
