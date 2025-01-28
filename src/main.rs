@@ -1,16 +1,21 @@
 
 use tokio;
 use axum::{self, http::StatusCode, response::Html, routing::get, Router};
+use tower_http::services::ServeDir;
 
 
 
 #[tokio::main]
 async fn main() {
 
-    let app = Router::new().route("/", get(read_index));
+    // Define app routes
+    let app = Router::new()
+        .route("/", get(read_index))
+        .fallback_service(ServeDir::new("frontend"));
 
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8000").await.unwrap();
+    // Create TCP listener and serve app
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 

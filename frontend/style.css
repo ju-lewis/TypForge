@@ -1,0 +1,30 @@
+/* TypForge stylesheet */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+
+:root {
+    --main-accent: #3AAFA9;
+    --secondary-accent: #2B7A78;
+    --dark: #1E2E35;
+    --dark-secondary: #1A1F24;
+    --light-main: #DEF2F1;
+    --text-dark: #111111;
+    --text-light: #EEEEEE;
+
+    --link: #CCCCCC;
+    --link-hover: #999999;
+    --link-visited: #BE6EDF;
+}
+
+html {
+    font-size: 120%;
+	background-color: var(--dark-secondary);
+}
+
+body {
+	background-color: var(--dark-secondary);
+    color: white;
+    font-family: "Nunito Sans";
+}
