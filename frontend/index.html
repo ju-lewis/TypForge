@@ -21,8 +21,11 @@
                 It's not intended to write an entire AI slop letter for you, rather it helps targeting specific
                 talking points using the application listing and your previous experience (CV).
                 <br>
-                This is why I've integrated a Typst editing environment with live incremental compilation into TypForge, 
-                so you can enter the actual content.
+                This is why I've integrated a very minimal Typst editing environment with live incremental 
+                compilation into TypForge, so you can enter the actual content.
+                <br>
+
+                You can also directly export the <code>.typ</code> file for editing in a more capable editor.
             </p>
 
             <!-- CV + Job listing content input -->
@@ -40,7 +43,7 @@
                     <!-- Raw (editable) Typst content -->
                     <div>
                         <h2>Editable Typst Code</h2>
-                        <textarea id="typst-input"></textarea>
+                        <textarea id="typst-input" onkeyup="autoSizeInput()"></textarea>
                     </div>
 
                     <!-- Rendered Typst content -->
