@@ -16,7 +16,7 @@ use reqwest::Client;
 
 
 
-const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$";
+const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
 const API_KEY: &'static str = env!("GEMINI_API_KEY");
 
 
@@ -74,6 +74,7 @@ async fn read_index() -> Result<Html<String>, StatusCode> {
 /// Query the Google Gemini?? API to generate an application-specific Typst cover letter template.
 async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRequest>) -> Result<String, StatusCode> {
 
+
     let url = String::from(GEMINI_API_ENDPOINT) + API_KEY;
     
     // Create full prompt
@@ -93,20 +94,26 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
         .send().await;
     
     if res.is_err() {
+        eprintln!("Error accessing AI API!: {:?}", res.unwrap_err());
         return Err(StatusCode::INTERNAL_SERVER_ERROR)
     }
 
     let json: Value = match res.unwrap().json().await {
-        Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+        Err(e) => {
+            eprintln!("Error getting response JSON: {:?}", e);
+            return Err(StatusCode::INTERNAL_SERVER_ERROR)
+        },
         Ok(j) => j
     };
 
     // Pull text from API response
-    let content = match json["candidates"][0]["content"].as_str() {
-        None => return Err(StatusCode::INTERNAL_SERVER_ERROR),
+    let content = match json["candidates"][0]["content"]["parts"][0]["text"].as_str() {
+        None => {
+            eprintln!("Error getting content from JSON");
+            return Err(StatusCode::INTERNAL_SERVER_ERROR)
+        },
         Some(c) => c
     }.to_string();
-
 
     Ok(content)
 }

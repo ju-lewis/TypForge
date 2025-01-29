@@ -73,14 +73,19 @@ function resetInput(id) {
 }
 
 async function sendInputs() {
+
     const body = {
         cv: cvContent,
         spec: appContent
     };
 
+    console.log("Sending owo:");
+    console.log(body);
+
 
     const result = await fetch("/template", {
         method: "POST",
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body)
     });
 
@@ -88,11 +93,10 @@ async function sendInputs() {
         //TODO: Warn user there was an error (check status code)
         return;
     }
-
-    //TODO: set Typst code box
     const typstCode = await result.text();
-
-    console.log(`Generated Typst code: ${typstCode}`);
+    
+    const outputBox = document.getElementById("typst-input");
+    outputBox.innerHTML = typstCode;
 }
 
 
