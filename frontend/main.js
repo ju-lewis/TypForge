@@ -72,5 +72,26 @@ function resetInput(id) {
 
 }
 
+async function sendInputs() {
+    const body = {
+        cv: cvContent,
+        spec: appContent
+    };
+
+
+    const result = await fetch("/template", {
+        method: "POST",
+        body: JSON.stringify(body)
+    });
+
+    if (!result.ok) {
+        //TODO: Warn user there was an error (check status code)
+        return;
+    }
+
+    //TODO: set Typst code box
+
+}
+
 
 
