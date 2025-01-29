@@ -107,7 +107,6 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
         Some(c) => c
     }.to_string();
 
-    
 
     Ok(content)
 }

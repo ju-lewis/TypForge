@@ -90,7 +90,9 @@ async function sendInputs() {
     }
 
     //TODO: set Typst code box
+    const typstCode = await result.text();
 
+    console.log(`Generated Typst code: ${typstCode}`);
 }
 
 
