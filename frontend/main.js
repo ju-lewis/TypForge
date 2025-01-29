@@ -28,5 +28,29 @@ function handleInput(elem) {
     } else return;
 
     // Replace displayed content in textbox with loading symbol
+    setTimeout(() => {
+        elem.value = "";
+        textBoxLoading(elem);
+    }, 150);
 
 }
+
+function textBoxLoading(elem) {
+    elem.placeholder = "Loading";
+    elem.disabled = true;
+    elem.dots = "";
+
+    const id = setInterval(() => {
+        if (elem.disabled) {
+            elem.placeholder = "Loading" + elem.dots;
+            elem.dots += ".";
+            if (elem.dots.length > 3) {
+                elem.dots = "";
+            }
+        } else {
+            clearInterval(id);
+        }
+    }, 300);
+}
+
+
