@@ -79,10 +79,6 @@ async function sendInputs() {
         spec: appContent
     };
 
-    console.log("Sending owo:");
-    console.log(body);
-
-
     const result = await fetch("/template", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -93,7 +89,12 @@ async function sendInputs() {
         //TODO: Warn user there was an error (check status code)
         return;
     }
-    const typstCode = await result.text();
+    let typstCode = await result.text();
+
+    // Sanitise code
+    typstCode = typstCode.replaceAll("```typst", "");
+    typstCode = typstCode.replaceAll("```", "");
+    
     
     const outputBox = document.getElementById("typst-input");
     outputBox.innerHTML = typstCode;
