@@ -16,13 +16,13 @@
         <main>
 
             <p>
-                TypForge is a tool for rapidly prototyping job-specific typeset cover letter templates.
+                TypForge is a tool for rapidly prototyping application-specific typeset cover letter templates.
                 <br>
                 It's not intended to write an entire AI slop letter for you, rather it helps targeting specific
                 talking points using the application listing and your previous experience (CV).
                 <br>
                 This is why I've integrated a very minimal Typst editing environment with live incremental 
-                compilation into TypForge, so you can enter the actual content.
+                compilation into TypForge, so you can write the content direcly in the app.
                 <br>
 
                 You can also directly export the <code>.typ</code> file for editing in a more capable editor.
@@ -30,11 +30,10 @@
 
             <!-- CV + Job listing content input -->
             <section>
-                <input class="small-input" placeholder="CV content">
-                <input class="small-input" placeholder="Job listing content">
+                <input id="cv-content" class="small-input" placeholder="CV content" oninput="handleInput(this)"> 
+                <input id="app-content" class="small-input" placeholder="Application Specification" oninput="handleInput(this)">
             </section>
 
-            <hr>
 
             <section>
 
@@ -42,8 +41,12 @@
                 <div class="output-container">
                     <!-- Raw (editable) Typst content -->
                     <div>
-                        <h2>Editable Typst Code</h2>
-                        <textarea id="typst-input" onkeyup="autoSizeInput()"></textarea>
+                        <h2>Typst Editor</h2>
+                        <div>
+                            <div id="line-numbers">
+                            </div> 
+                            <textarea id="typst-input" onkeyup="autoSizeInput()" rows="10"></textarea>
+                        </div>
                     </div>
 
                     <!-- Rendered Typst content -->

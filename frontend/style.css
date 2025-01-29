@@ -16,15 +16,25 @@
     --link: #CCCCCC;
     --link-hover: #999999;
     --link-visited: #BE6EDF;
+
+    --dot-size: 2px; /* Size of the dots */
+    --dot-spacing: 20px; /* Spacing between dots */
 }
 
 html {
     font-size: 120%;
 	background-color: var(--dark-secondary);
+    background-image: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.1) var(--dot-size),
+        transparent var(--dot-size)
+    );
+    background-size: var(--dot-spacing) var(--dot-spacing);
+    background-position: 0 0;
 }
 
 body {
-	background-color: var(--dark-secondary);
+
     color: white;
     font-family: "Nunito Sans";
     padding: 2rem;
