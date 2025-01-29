@@ -15,8 +15,7 @@ use serde_json::{json, Value};
 use reqwest::Client;
 
 
-
-const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=";
+const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=";
 const API_KEY: &'static str = env!("GEMINI_API_KEY");
 
 
