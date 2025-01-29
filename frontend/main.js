@@ -40,17 +40,37 @@ function textBoxLoading(elem) {
     elem.disabled = true;
     elem.dots = "";
 
+
+    // Idk, nice visual loading animation lol
     const id = setInterval(() => {
         if (elem.disabled) {
             elem.placeholder = "Loading" + elem.dots;
             elem.dots += ".";
-            if (elem.dots.length > 3) {
+            if (elem.dots.length > 4) {
                 elem.dots = "";
+                clearInterval(id);
+                elem.placeholder = "Content Loaded";
             }
-        } else {
-            clearInterval(id);
-        }
-    }, 300);
+        } 
+    }, 100);
+
 }
+
+function resetInput(id) {
+
+    const elem = document.getElementById(id);
+
+    elem.disabled = false;
+    
+    if (id === "cv-content") {
+        elem.placeholder = "CV content";
+        cvContent = "";
+    } else if (id === "app-content") {
+        elem.placeholder = "Application details";
+        appContent = "";
+    }
+
+}
+
 
 

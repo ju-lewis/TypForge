@@ -15,25 +15,47 @@
 
         <main>
 
-            <p>
+            <p class="description">
                 TypForge is a tool for rapidly prototyping application-specific typeset cover letter templates.
-                <br>
+
                 It's not intended to write an entire AI slop letter for you, rather it helps targeting specific
                 talking points using the application listing and your previous experience (CV).
-                <br>
-                This is why I've integrated a very minimal Typst editing environment with live incremental 
-                compilation into TypForge, so you can write the content direcly in the app.
-                <br>
 
-                You can also directly export the <code>.typ</code> file for editing in a more capable editor.
+                This is why I've integrated a very minimal Typst editing environment with live incremental 
+                compilation into TypForge, so you can write the content directly in the app.
+                
+                You can also export the <code>.typ</code> file for editing in a more capable editor.
             </p>
 
+            <hr>
             <!-- CV + Job listing content input -->
-            <section>
-                <input id="cv-content" class="small-input" placeholder="CV content" onchange="handleInput(this)"> 
-                <input id="app-content" class="small-input" placeholder="Application Details" onchange="handleInput(this)">
-            </section>
+            <section class="input-container">
+                <div>
+                    <h2>How to use TypForge</h2>
+                    <p>Paste the relevant content into the input boxes and press <code>[Generate Template]</code></p>
+                    <p>
+                        After the template is generated, the Typst code will appear in the editor, while the compiled document
+                        appears on the right of the screen.
+                    </p>
+                </div>
+                <div>
+                    <div class="input-row">
+                        <input id="cv-content" class="small-input" placeholder="CV content" onchange="handleInput(this)"> 
+                        <button class="delete-button" onclick="resetInput('cv-content')">&#x2A2F;</button>
+                    </div>
 
+                    <div class="input-row">
+                        <input id="app-content" class="small-input" placeholder="Application details" onchange="handleInput(this)">
+                        <button class="delete-button" onclick="resetInput('app-content')">&#x2A2F;</button>
+                    </div>
+
+                    <div style="width: fit-content; margin: auto;">
+                        <button id="gen-btn">Generate Template</button>
+                    </div>
+                </div>
+            </section>
+            
+            <hr>
 
             <section>
 
