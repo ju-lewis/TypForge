@@ -8,11 +8,12 @@
 
 
 use tokio;
-use axum::{self, extract::{State, Json}, http::StatusCode, response::Html, routing::{get, post}, Router};
+use axum::{self, extract::{Json, State}, http::{StatusCode, header}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use tower_http::services::ServeDir;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use reqwest::Client;
+use typst_as_lib;
 
 
 const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=";
@@ -30,6 +31,14 @@ struct TemplateRequest {
     spec: String
 }
 
+#[derive(Deserialize)]
+struct RenderRequest {
+    code: String
+}
+
+/// Typst compiler required type definitions
+
+
 
 
 #[tokio::main]
@@ -43,7 +52,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(read_index))
         .route("/template", post(create_template))
-        .route("/rendered-pdf", get(render_pdf))
+        .route("/rendered-pdf", post(rendered_pdf))
         .fallback_service(ServeDir::new("frontend"))
         .with_state(state);
 
@@ -118,6 +127,34 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
 }
 
 /// Render the raw Typst code into a PDF
-async fn render_pdf() {
-    todo!();
+async fn rendered_pdf(Json(r): Json<RenderRequest>) -> impl IntoResponse {
+
+    let typst_source = r.code;
+
+    /*
+    let font = match Font::new(Bytes::from(FONT_FILE), 0) {
+        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
+        Ok(f) => f
+    };
+    let template = typst_as_lib::TypstTemplate::new(vec![font], &typst_source);
+
+    let document = match template.compile_with_input(dummy_data()).output {
+        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
+        Ok(d) => d
+    };
+
+    let export_options = Default::default();
+    let pdf = match typst_pdf::pdf(&doc, &options) {
+        Err(_) => return "Couldn't Generate PDF",
+        Ok(p) => p
+    };
+    */
+
+    // Create headers for an inline file
+    let headers = [
+        (header::CONTENT_TYPE, "application/pdf"),
+        (header::CONTENT_DISPOSITION, "inline"),
+    ];
+    
+
 }

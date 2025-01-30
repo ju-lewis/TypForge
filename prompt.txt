@@ -20,7 +20,7 @@ Example of expected output:
   #text(18pt, weight: "bold")[Jane Smith]
   #v(3pt)
   // Replace with your contact details
-  #text(10pt, tracking: 1.5pt)[email@example.com · (555) 555-5555]
+  #text(10pt, tracking: 1.5pt)[email\@example.com · (555) 555-5555]
   #v(1em)
   #line(length: 100%, stroke: 0.5pt)
 ]

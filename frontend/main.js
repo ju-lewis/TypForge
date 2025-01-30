@@ -95,9 +95,9 @@ async function sendInputs() {
     typstCode = typstCode.replaceAll("```typst", "");
     typstCode = typstCode.replaceAll("```", "");
     
-    
-    const outputBox = document.getElementById("typst-input");
-    outputBox.innerHTML = typstCode;
+
+    typstInput.innerHTML = typstCode;
+    autoSizeInput();
 }
 
 
