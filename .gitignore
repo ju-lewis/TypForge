@@ -1,4 +1,7 @@
 /target
 
+# Don't track generated files
+/pdf
+
 # MacOS moment
 .DS_Store

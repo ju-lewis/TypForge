@@ -150,7 +150,7 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
 
     // Save to file
     let id = uuid::Uuid::new_v4();
-    let write_result = std::fs::write(format!("pdf/{}.pdf", id), &pdf);
+    let write_result = std::fs::write(format!("frontend/pdf/{}.pdf", id), &pdf);
 
     
     if write_result.is_err() {

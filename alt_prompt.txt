@@ -7,7 +7,6 @@ Contains clear comments explaining what content should be customized
 Includes some generic professional language where appropriate
 
 Generate ONLY valid Typst code that can be used directly in a .typ file. Maintain a professional, technical appearance.
-Also, make sure any 'at' symbols (@) ALWAYS have a backslash (\) in front on them.
 
 Example of expected output:
 
@@ -21,7 +20,7 @@ Example of expected output:
     #v(3pt)
 
     // Replace with your contact details
-    #text(10pt, tracking: 1.5pt)[email\@example.com · (555) 555-5555]
+    #text(10pt, tracking: 1.5pt)[Your Email Here · (555) 555-5555]
     #v(1em)
     #line(length: 100%, stroke: 0.5pt)
 ]

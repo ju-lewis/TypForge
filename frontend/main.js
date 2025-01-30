@@ -1,5 +1,7 @@
 
 const typstInput = document.getElementById("typst-input");
+const fileBox = document.getElementById("file-container");
+const fileContainer = document.getElementById("file-outer-container");
 
 let cvContent = "";
 let appContent = "";
@@ -15,7 +17,7 @@ function autoSizeInput() {
     //TODO: Implement limit
 
     typstInput.rows = numNewLines;
-
+    fileBox.height = typstInput.height;
 }
 
 function handleInput(elem) {
@@ -28,10 +30,8 @@ function handleInput(elem) {
     } else return;
 
     // Replace displayed content in textbox with loading symbol
-    setTimeout(() => {
-        elem.value = "";
-        textBoxLoading(elem);
-    }, 150);
+    elem.value = "";
+    textBoxLoading(elem);
 
 }
 
@@ -52,7 +52,7 @@ function textBoxLoading(elem) {
                 elem.placeholder = "Content Loaded";
             }
         } 
-    }, 100);
+    }, 20);
 
 }
 
@@ -129,12 +129,11 @@ async function requestCompilation() {
 
 // Resize the document to match page resizes
 function updateDocumentSize() {
-    const fileBox = document.getElementById("file-container");
-    const container = document.getElementById("file-outer-container");
 
-    const rect = container.getBoundingClientRect();
+    const rect = fileContainer.getBoundingClientRect();
 
     fileBox.width = rect.width;
+    fileBox.height = typstInput.height;
 }
 
 window.addEventListener("resize", () => {
