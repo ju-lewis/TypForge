@@ -117,6 +117,7 @@ async function requestCompilation() {
 
     let filename = await res.text();
 
+
     // Update object to point to new filename
     console.log(`Cached file: ${filename}.pdf`);
     
@@ -125,6 +126,8 @@ async function requestCompilation() {
     
 }   
 
+
+// Resize the document to match page resizes
 function updateDocumentSize() {
     const fileBox = document.getElementById("file-container");
     const container = document.getElementById("file-outer-container");
@@ -137,5 +140,7 @@ function updateDocumentSize() {
 window.addEventListener("resize", () => {
     updateDocumentSize();
 });
+
+
 
 updateDocumentSize();

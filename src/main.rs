@@ -15,6 +15,7 @@ use serde_json::{json, Value};
 use reqwest::Client;
 use typst::{foundations::Bytes, text::Font};
 use typst_as_lib;
+use uuid;
 
 
 const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=";
@@ -148,12 +149,8 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
     };
 
     // Save to file
-    let now = match std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH) {
-        Err(_) => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Somehow my server's system time broke lmao".to_string())),
-        Ok(n) => n.as_millis()
-    };
-
-    let write_result = std::fs::write(format!("pdf/{}.pdf", now), &pdf);
+    let id = uuid::Uuid::new_v4();
+    let write_result = std::fs::write(format!("pdf/{}.pdf", id), &pdf);
 
     
     if write_result.is_err() {
@@ -168,7 +165,7 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
     //Ok((headers, axum::body::Bytes::from(pdf)))
 
     // Return filename
-    Ok(format!("{:?}", now))
+    Ok(format!("{:?}", id))
 }
 
 
