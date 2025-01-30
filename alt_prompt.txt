@@ -33,9 +33,16 @@ Example of expected output:
 #v(12pt)
 
 // Replace with recipient details
-[Hiring Manager Name
-Company Name
-Company Address]
+#grid(
+  columns: (1fr, 1fr),
+  align(left)[
+    Hiring Manager Name
+  ],
+  align(right)[
+    Company Name
+    Company Address
+  ]
+)
 
 #v(24pt)
 

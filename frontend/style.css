@@ -149,3 +149,18 @@ h1, h2, h3 {
 .delete-button:active {
     background-color: rgba(255, 255, 255, 0.1); /* Slightly more visible on click */
 }
+
+#alert {
+    width: 400px;
+    height: 3rem;
+
+    position: fixed;
+
+    bottom: 2rem;
+    left: calc(50vw - 200px);
+
+    background-color: #bf5555;
+    border-radius: 1.5rem;
+
+    display: none;
+}

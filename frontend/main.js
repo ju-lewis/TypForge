@@ -2,6 +2,7 @@
 const typstInput = document.getElementById("typst-input");
 const fileBox = document.getElementById("file-container");
 const fileContainer = document.getElementById("file-outer-container");
+const alert = document.getElementById("alert");
 
 let cvContent = "";
 let appContent = "";
@@ -17,7 +18,7 @@ function autoSizeInput() {
     //TODO: Implement limit
 
     typstInput.rows = numNewLines;
-    fileBox.height = typstInput.height;
+    fileBox.height = typstInput.getBoundingClientRect().height;
 }
 
 function handleInput(elem) {
@@ -87,6 +88,10 @@ async function sendInputs() {
 
     if (!result.ok) {
         //TODO: Warn user there was an error (check status code)
+
+        const err = await result.text();
+        showAlert(err);
+        
         return;
     }
     let typstCode = await result.text();
@@ -98,6 +103,9 @@ async function sendInputs() {
 
     typstInput.innerHTML = typstCode;
     autoSizeInput();
+    
+
+    requestCompilation();
 }
 
 async function requestCompilation() {
@@ -112,11 +120,15 @@ async function requestCompilation() {
 
     if (!res.ok) {
         // Compilation failed, warn user
+
+        const err = await res.text();
+        showAlert(err);
         return;
     }
 
     let filename = await res.text();
 
+    updateDocumentSize()
 
     // Update object to point to new filename
     console.log(`Cached file: ${filename}.pdf`);
@@ -133,13 +145,23 @@ function updateDocumentSize() {
     const rect = fileContainer.getBoundingClientRect();
 
     fileBox.width = rect.width;
-    fileBox.height = typstInput.height;
+
+    console.log(`Height: ${typstInput.getBoundingClientRect().height}`);
+    fileBox.height = typstInput.getBoundingClientRect().height;
 }
+
+
+function showAlert(msg) {
+    alert.querySelector("p").innerText = msg;
+    alert.style.display = "block";
+    setTimeout(() => {
+        alert.style.display = "none";
+    }, 5000);
+}
+
+
 
 window.addEventListener("resize", () => {
     updateDocumentSize();
 });
-
-
-
 updateDocumentSize();
