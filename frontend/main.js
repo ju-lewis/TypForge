@@ -112,6 +112,7 @@ async function requestCompilation() {
 
     if (!res.ok) {
         // Compilation failed, warn user
+        return;
     }
 
     let filename = await res.text();
@@ -119,8 +120,22 @@ async function requestCompilation() {
     // Update object to point to new filename
     console.log(`Cached file: ${filename}.pdf`);
     
+    const file_box = document.getElementById("file-container");
+    file_box.data = `pdf/${filename}.pdf`;
+    
+}   
+
+function updateDocumentSize() {
+    const fileBox = document.getElementById("file-container");
+    const container = document.getElementById("file-outer-container");
+
+    const rect = container.getBoundingClientRect();
+
+    fileBox.width = rect.width;
 }
 
+window.addEventListener("resize", () => {
+    updateDocumentSize();
+});
 
-
-
+updateDocumentSize();
