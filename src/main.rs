@@ -8,16 +8,18 @@
 
 
 use tokio;
-use axum::{self, extract::{Json, State}, http::{StatusCode, header}, response::{Html, IntoResponse}, routing::{get, post}, Router};
+use axum::{self, extract::{Json, State}, http::{header, HeaderMap, StatusCode}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use tower_http::services::ServeDir;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use reqwest::Client;
+use typst::{foundations::Bytes, text::Font};
 use typst_as_lib;
 
 
 const GEMINI_API_ENDPOINT: &'static str  = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=";
 const API_KEY: &'static str = env!("GEMINI_API_KEY");
+const FONT: &[u8] = include_bytes!("../IBMPlexSerif-Regular.ttf");
 
 
 #[derive(Clone)]
@@ -36,10 +38,6 @@ struct RenderRequest {
     code: String
 }
 
-/// Typst compiler required type definitions
-
-
-
 
 #[tokio::main]
 async fn main() {
@@ -52,7 +50,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(read_index))
         .route("/template", post(create_template))
-        .route("/rendered-pdf", post(rendered_pdf))
+        .route("/render-pdf", post(render_pdf))
         .fallback_service(ServeDir::new("frontend"))
         .with_state(state);
 
@@ -86,7 +84,7 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
     let url = String::from(GEMINI_API_ENDPOINT) + API_KEY;
     
     // Create full prompt
-    let prompt = match std::fs::read_to_string("prompt.txt") {
+    let prompt = match std::fs::read_to_string("alt_prompt.txt") {
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
         Ok(p) => p + &format!("\nCV Content: {}\n\nJob/application listing content: {}", r.cv, r.spec)
     };
@@ -127,34 +125,53 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
 }
 
 /// Render the raw Typst code into a PDF
-async fn rendered_pdf(Json(r): Json<RenderRequest>) -> impl IntoResponse {
+async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (StatusCode, String)> {
 
     let typst_source = r.code;
 
-    /*
-    let font = match Font::new(Bytes::from(FONT_FILE), 0) {
-        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
-        Ok(f) => f
+    
+    let font = match Font::new(Bytes::from(FONT), 0) {
+        None => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Couldn't load font".to_string())),
+        Some(f) => f
     };
-    let template = typst_as_lib::TypstTemplate::new(vec![font], &typst_source);
+    let template = typst_as_lib::TypstTemplate::new(vec![font], typst_source);
 
-    let document = match template.compile_with_input(dummy_data()).output {
-        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR,
+    let document = match template.compile_with_input(typst::foundations::Dict::new()).output {
+        Err(_) => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Compilation failed".to_string())),
         Ok(d) => d
     };
 
     let export_options = Default::default();
-    let pdf = match typst_pdf::pdf(&doc, &options) {
-        Err(_) => return "Couldn't Generate PDF",
+    let pdf = match typst_pdf::pdf(&document, &export_options) {
+        Err(_) => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Rendering PDF failed".to_string())),
         Ok(p) => p
     };
-    */
+
+    // Save to file
+    let now = match std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH) {
+        Err(_) => return Err((StatusCode::INTERNAL_SERVER_ERROR, "Somehow my server's system time broke lmao".to_string())),
+        Ok(n) => n.as_millis()
+    };
+
+    let write_result = std::fs::write(format!("pdf/{}.pdf", now), &pdf);
+
+    
+    if write_result.is_err() {
+        return Err((StatusCode::INTERNAL_SERVER_ERROR, "There was an error caching your letter.".to_string()));
+    }
 
     // Create headers for an inline file
-    let headers = [
-        (header::CONTENT_TYPE, "application/pdf"),
-        (header::CONTENT_DISPOSITION, "inline"),
-    ];
-    
+    //let mut headers = HeaderMap::new();
+    //headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("application/pdf"));
+    //headers.insert(header::CONTENT_DISPOSITION, header::HeaderValue::from_static("inline"));
+    // Return headers and PDF contents
+    //Ok((headers, axum::body::Bytes::from(pdf)))
 
+    // Return filename
+    Ok(format!("{:?}", now))
 }
+
+
+
+
+

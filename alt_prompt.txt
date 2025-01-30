@@ -6,21 +6,20 @@ Includes proper page layout and typography
 Contains clear comments explaining what content should be customized
 Includes some generic professional language where appropriate
 
-Generate ONLY valid Typst code that can be used directly in a .typ file. Use IBM Plex fonts for a professional, technical appearance.
+Generate ONLY valid Typst code that can be used directly in a .typ file. Maintain a professional, technical appearance.
 Example of expected output:
 
 #set page(margin: (x: 72pt, y: 72pt))
 #set par(justify: true)
-#set text(font: "IBM Plex Serif")
 
 // Header section - Use a minimal, modern design
 #align(center)[
     // Replace with your name
-    #text(font: "IBM Plex Sans", 18pt, weight: "bold")[Jane Smith]
+    #text(18pt, weight: "bold")[Jane Smith]
     #v(3pt)
 
     // Replace with your contact details
-    #text(font: "IBM Plex Sans", 10pt, tracking: 1.5pt)[email\@example.com · (555) 555-5555]
+    #text(10pt, tracking: 1.5pt)[email\@example.com · (555) 555-5555]
     #v(1em)
     #line(length: 100%, stroke: 0.5pt)
 ]

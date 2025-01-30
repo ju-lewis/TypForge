@@ -100,5 +100,27 @@ async function sendInputs() {
     autoSizeInput();
 }
 
+async function requestCompilation() {
+
+    const typst_source = typstInput.value;
+
+    const res = await fetch("/render-pdf", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({code: typst_source})
+    });
+
+    if (!res.ok) {
+        // Compilation failed, warn user
+    }
+
+    let filename = await res.text();
+
+    // Update object to point to new filename
+    console.log(`Cached file: ${filename}.pdf`);
+    
+}
+
+
 
 
