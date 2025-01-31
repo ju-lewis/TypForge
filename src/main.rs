@@ -36,6 +36,7 @@ struct TemplateRequest {
 
 #[derive(Deserialize)]
 struct RenderRequest {
+    prev_file: String,
     code: String
 }
 
@@ -152,9 +153,14 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
     let id = uuid::Uuid::new_v4();
     let write_result = std::fs::write(format!("frontend/pdf/{}.pdf", id), &pdf);
 
-    
     if write_result.is_err() {
         return Err((StatusCode::INTERNAL_SERVER_ERROR, "There was an error caching your letter.".to_string()));
+    }
+
+    // Delete previous version of the file
+    if r.prev_file.starts_with("/pdf/") && !r.prev_file.contains("..") {
+        let x = std::fs::remove_file("frontend".to_string() + &r.prev_file);
+
     }
 
     // Create headers for an inline file

@@ -67,7 +67,7 @@
                         <div>
                             <div id="line-numbers">
                             </div> 
-                            <textarea id="typst-input" onkeyup="autoSizeInput()" rows="10"></textarea>
+                            <textarea id="typst-input" onchange="requestCompilation()" onkeyup="autoSizeInput()" rows="10"></textarea>
                         </div>
                         <button onclick="requestCompilation()">Compile</button>
                     </div>

@@ -15,10 +15,10 @@ let appContent = "";
 function autoSizeInput() {
     const numNewLines = Math.max([...typstInput.value.matchAll(/\n/g)].length + 2, 10);
 
-    //TODO: Implement limit
 
     typstInput.rows = numNewLines;
     fileBox.height = typstInput.getBoundingClientRect().height;
+
 }
 
 function handleInput(elem) {
@@ -108,14 +108,20 @@ async function sendInputs() {
     requestCompilation();
 }
 
+
+
 async function requestCompilation() {
 
     const typst_source = typstInput.value;
 
+
     const res = await fetch("/render-pdf", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({code: typst_source})
+        body: JSON.stringify({
+            prev_file: fileBox.data.length > 1 ? new URL(fileBox.data).pathname : "",
+            code: typst_source
+        })
     });
 
     if (!res.ok) {
@@ -128,13 +134,11 @@ async function requestCompilation() {
 
     let filename = await res.text();
 
-    updateDocumentSize()
+
+    updateDocumentSize();
 
     // Update object to point to new filename
-    console.log(`Cached file: ${filename}.pdf`);
-    
-    const file_box = document.getElementById("file-container");
-    file_box.data = `pdf/${filename}.pdf`;
+    fileBox.data = `pdf/${filename}.pdf`;
     
 }   
 
@@ -146,7 +150,6 @@ function updateDocumentSize() {
 
     fileBox.width = rect.width;
 
-    console.log(`Height: ${typstInput.getBoundingClientRect().height}`);
     fileBox.height = typstInput.getBoundingClientRect().height;
 }
 
@@ -165,3 +168,6 @@ window.addEventListener("resize", () => {
     updateDocumentSize();
 });
 updateDocumentSize();
+
+
+
