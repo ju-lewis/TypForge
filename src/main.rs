@@ -159,8 +159,7 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
 
     // Delete previous version of the file
     if r.prev_file.starts_with("/pdf/") && !r.prev_file.contains("..") {
-        let x = std::fs::remove_file("frontend".to_string() + &r.prev_file);
-
+        let _ = std::fs::remove_file("frontend".to_string() + &r.prev_file);
     }
 
     // Create headers for an inline file
