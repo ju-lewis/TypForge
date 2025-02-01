@@ -182,7 +182,19 @@ h1, h2, h3 {
     top: 0;
     left: 0;
 
-    background-color: #00000052;
+    background-color: #00000082;
+}
+
+#loading-container {
+    transform: translateY(44vh);
+}
+
+#loading-internal {
+    margin: auto;
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .loader {
