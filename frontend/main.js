@@ -3,6 +3,7 @@ const typstInput = document.getElementById("typst-input");
 const fileBox = document.getElementById("file-container");
 const fileContainer = document.getElementById("file-outer-container");
 const alert = document.getElementById("alert");
+const loading = document.getElementById("loading");
 
 let cvContent = "";
 let appContent = "";
@@ -80,11 +81,15 @@ async function sendInputs() {
         spec: appContent
     };
 
+    loading.style.display = "block";
+
     const result = await fetch("/template", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(body)
     });
+
+    loading.style.display = "none";
 
     if (!result.ok) {
         //TODO: Warn user there was an error (check status code)
