@@ -86,7 +86,7 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
     let url = String::from(GEMINI_API_ENDPOINT) + API_KEY;
     
     // Create full prompt
-    let prompt = match std::fs::read_to_string("alt_prompt.txt") {
+    let prompt = match std::fs::read_to_string("prompt.txt") {
         Err(_) => return Err(StatusCode::INTERNAL_SERVER_ERROR),
         Ok(p) => p + &format!("\nCV Content: {}\n\nJob/application listing content: {}", r.cv, r.spec)
     };
