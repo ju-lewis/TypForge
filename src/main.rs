@@ -8,7 +8,7 @@
 
 
 use tokio;
-use axum::{self, extract::{Json, State}, http::{header, HeaderMap, StatusCode}, response::{Html, IntoResponse}, routing::{get, post}, Router};
+use axum::{self, extract::{Json, State}, http::StatusCode, response::Html, routing::{get, post}, Router};
 use tower_http::services::ServeDir;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -28,15 +28,22 @@ struct AppState {
     client: Client
 }
 
+/// JSON request body for creating the Typst template
 #[derive(Deserialize, Serialize)]
 struct TemplateRequest {
-    cv: String,
+    /// CV/resume contents
+    cv: String, 
+    /// Application specification
     spec: String
 }
 
+/// JSON request body for compiling the source Typst code to a PDF
 #[derive(Deserialize)]
 struct RenderRequest {
+    /// The name of the previously compiled file from the user's current session
+    /// (if applicable)
     prev_file: String,
+    /// Typst source code
     code: String
 }
 
@@ -57,14 +64,16 @@ async fn main() {
         .with_state(state);
 
 
-    // Create TCP listener and serve app
+    // Serve app on localhost (assuming there's a reverse proxy if this is to be exposed to the
+    // internet)
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
 
 
 
-/// Always returns the `index.html` file.
+/// Route handler that always returns the `index.html` file.
+///
 async fn read_index() -> Result<Html<String>, StatusCode> {
 
     let pwd = match std::env::current_dir() {
@@ -79,7 +88,8 @@ async fn read_index() -> Result<Html<String>, StatusCode> {
     }
 }
 
-/// Query the Google Gemini?? API to generate an application-specific Typst cover letter template.
+/// Axum route handler that queries the Google Gemini API to generate an application-specific Typst cover letter template.
+///
 async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRequest>) -> Result<String, StatusCode> {
 
 
@@ -114,7 +124,7 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
         Ok(j) => j
     };
 
-    // Pull text from API response
+    // Pull text from API response (The schema for this is in the Gemini docs)
     let content = match json["candidates"][0]["content"]["parts"][0]["text"].as_str() {
         None => {
             eprintln!("Error getting content from JSON");
@@ -126,8 +136,10 @@ async fn create_template(State(state): State<AppState>, Json(r): Json<TemplateRe
     Ok(content)
 }
 
-/// Render the raw Typst code into a PDF
-async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (StatusCode, String)> {
+
+/// Axum router handler to render the raw Typst code into a PDF
+///
+async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<String, (StatusCode, String)> {
 
     let typst_source = r.code;
 
@@ -161,13 +173,6 @@ async fn render_pdf(Json(r): Json<RenderRequest>) -> Result<impl IntoResponse, (
     if r.prev_file.starts_with("/pdf/") && !r.prev_file.contains("..") {
         let _ = std::fs::remove_file("frontend".to_string() + &r.prev_file);
     }
-
-    // Create headers for an inline file
-    //let mut headers = HeaderMap::new();
-    //headers.insert(header::CONTENT_TYPE, header::HeaderValue::from_static("application/pdf"));
-    //headers.insert(header::CONTENT_DISPOSITION, header::HeaderValue::from_static("inline"));
-    // Return headers and PDF contents
-    //Ok((headers, axum::body::Bytes::from(pdf)))
 
     // Return filename
     Ok(format!("{:?}", id))

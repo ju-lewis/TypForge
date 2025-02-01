@@ -38,5 +38,6 @@ preferences - it's stored in the `prompt.txt` file.
 - [ ] Nicer PDF preview window
 - [ ] Refine prompt
 - [ ] See if I can work around the Typst compiler to remove the font file dependency.
+- [ ] Try to remove the need for caching the PDF on the server (try to serve directly as a binary stream, then render on the client)
 - [ ] Start hosting TypForge
 
